@@ -4,9 +4,9 @@
 #  Version:        1.1.2
 #  Author:         Feigelman Evgeny
 #  Date:           2025-02-12
-#  Description:    This script will install most of needed packages, that you will use
-#                  during your dayly work as a DevOps expert. Fill free to tell me if
-#                  you think that this script can be improved.
+#  Description:    This script will help you with NGNIX installation and configuration.
+#                  
+#                  
 set -o errexit
 set -o pipefail
 #set -x
