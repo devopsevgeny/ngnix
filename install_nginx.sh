@@ -218,7 +218,10 @@ while getopts ":hiIdD:" option; do
          exit;;
       D) # Check the dependencies of userdir, auth, and CGI. If they are not present, install them.
           add_auth
+          install_cgi
+          config_cgi
           create_test_script
+          config_userdir
           exit;;
      \?) # Invalid option
          echo "Error: Invalid option"
