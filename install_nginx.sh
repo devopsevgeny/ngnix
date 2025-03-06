@@ -65,7 +65,7 @@ install_ngnix_if_needed(){
     fi
 }
 
-# Function will create a virtual host in NGNIX 
+# Function will create a virtual host in NGNIX  
 create_virtual_host(){
     read -p "Enter desired virtual host , for example example.com: " my_domain
     cd $s_vailable
@@ -82,7 +82,7 @@ server {
 EOF
 }
 
-# Functiuon will check if any virtual hosts are exists exchept the default.
+# Functiuon will check if any virtual hosts are exists exchept the default and create one.
 check_and_create_virtual_host() {
     existing_vhosts=$(find "$s_enabled" -type l ! -name "default")
 
@@ -207,12 +207,10 @@ while getopts ":hiIdD:" option; do
       I) # Install NGINX 
          install_ngnix_if_needed
          exit;;
-      d) # Check dependencies
+      d) # Check that the virtual host is configured. If not, ask for a virtual host name and configure it.
          check_and_create_virtual_host
-         add_auth
          exit;;
-      D) # Install  dependencies
-          check_and_create_virtual_host
+      D) # Check the dependencies of userdir, auth, and CGI. If they are not present, install them.
           add_auth
           create_test_script
           exit;;
