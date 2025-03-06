@@ -11,6 +11,7 @@ set -o errexit
 set -o pipefail
 #set -x
 # -----------------------------------------------------
+
 # Variables 
 
 s_vailable=/etc/nginx/sites-available/
@@ -38,17 +39,31 @@ Help()
    echo
 }
 
-# Function will check if NGINX is installed.
 
 check_nginix()
 {
     if ! which nginx > /dev/null 2>&1; then
-            sudo apt update -y
-            sudo apt install nginx -y
+        echo "NGINX is not installed."
+    else
+        echo "NGINX is installed"
     fi
-    return 0  # Return 0 if Nginx is installed
 }
-check_extras(){
+
+# Function will check if NGINX is installed and install if not presented.
+
+check_install_nginix()
+{
+    if ! which nginx > /dev/null 2>&1; then
+        sudo apt update -y
+        sudo apt install nginx -y
+    else
+        echo "NGINX is installed"
+    fi
+}
+
+# Function will check if NGINX extras are installed and install them.
+
+check_install_extras(){
     for pkg in apache2-utils nginx-extras; do
         if dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null | grep -q "installed"; then
             echo "$pkg is installed."
