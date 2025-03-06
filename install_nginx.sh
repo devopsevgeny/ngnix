@@ -207,14 +207,11 @@ while getopts ":hiIdD:" option; do
          Help
          exit;;
       i) # Print if NGNIX installed 
-         if check_nginix ; then
-             echo "Nginx is installed"
-         else
-             echo "Nginx not found."
-         fi
+        check_nginix
          exit;;
       I) # Install NGINX 
-         install_ngnix_if_needed
+         check_install_nginix
+         check_install_extras
          exit;;
       d) # Check that the virtual host is configured. If not, ask for a virtual host name and configure it.
          check_and_create_virtual_host
