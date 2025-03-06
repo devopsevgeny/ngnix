@@ -40,7 +40,7 @@ Help()
 }
 
 
-check_nginix()
+check_nginx()
 {
     if ! which nginx > /dev/null 2>&1; then
         echo "NGINX is not installed."
@@ -109,7 +109,7 @@ add_auth(){
     local user=''
     local password=''
     local passfile="/etc/nginx/.htpasswd"
-    local ngnix_config="/etc/nginx/conf.d/restricred.conf;"
+    local ngnix_config="/etc/nginx/conf.d/restricred.conf"
     read -p "Enter username: " user
     read -s -p "Enter password: " password
     if [ ! -f "$passfile" ]; then
@@ -182,9 +182,9 @@ EOF
 
 # Userdir
 config_userdir(){
-user_dir=$(cat << EOF
+user_dir=$(cat <<EOF
 location ~ ^/~(.+?)(/.*)?$ {
-    alias /home/$1/public_html$2;
+    alias /home/\$1/public_html\$2;
 }
 EOF
 )
@@ -199,7 +199,6 @@ EOF
  
 }
 
-
 #Menu
 while getopts ":hiIdD:" option; do
    case $option in
@@ -207,7 +206,7 @@ while getopts ":hiIdD:" option; do
          Help
          exit;;
       i) # Print if NGNIX installed 
-        check_nginix
+        check_nginx
          exit;;
       I) # Install NGINX 
          check_install_nginix
