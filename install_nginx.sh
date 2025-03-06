@@ -30,11 +30,11 @@ Help()
    echo
    echo "Syntax: install_nginx.sh [-h|i|I|d|D]"
    echo "options:"
-   echo "h     Print this Help."
-   echo "i     Print if NGINX is installed or not."
-   echo "I     Install NGINX."
-   echo "d     Check dependencies."
-   echo "D     Install dependencies  "
+   echo "h     Print this Help. "
+   echo "i     Print if NGINX is installed or not. "
+   echo "I     Install NGINX. "
+   echo "d     Check that the virtual host is configured and configure it. "
+   echo "D     Check the dependencies of userdir, auth, and CGI. If they are not present, install them. "
    echo
 }
 
