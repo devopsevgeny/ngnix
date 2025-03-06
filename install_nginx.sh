@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # -----------------------------------------------------
 #  Script Name:    install_nginx.sh
-#  Version:        1.1.2
+#  Version:        1.1.3
 #  Author:         Feigelman Evgeny
 #  Date:           2025-02-12
 #  Description:    This script will help you with NGNIX installation and configuration.
@@ -207,10 +207,10 @@ while getopts ":hiIdD:" option; do
          Help
          exit;;
       i) # Print if NGNIX installed 
-        check_nginix
+        check_nginx
          exit;;
       I) # Install NGINX 
-         check_install_nginix
+         check_install_nginx
          check_install_extras
          exit;;
       d) # Check that the virtual host is configured. If not, ask for a virtual host name and configure it.
