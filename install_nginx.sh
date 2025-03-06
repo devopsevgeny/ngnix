@@ -43,17 +43,30 @@ Help()
 check_nginix()
 {
     if ! which nginx > /dev/null 2>&1; then
-        return 1  # Return 1 if Nginx is NOT installed
+            sudo apt update -y
+            sudo apt install nginx -y
     fi
     return 0  # Return 0 if Nginx is installed
 }
+check_extras(){
+    for pkg in apache2-utils nginx-extras; do
+        if dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null | grep -q "installed"; then
+            echo "$pkg is installed."
+        else
+            echo "$pkg is NOT installed. Installing..."
+            sudo apt install -y "$pkg"
+        fi
+    done
+    }
 
 #  Function will install  NGINX
-install_nginx(){
+
+#  Function will install  NGINX extras.
+install_nginx_extras(){
     sudo apt update -y
-    sudo apt install nginx -y
     sudo apt install apache2-utils nginx-extras -y
 }
+
 
 # Function will use check_nginix and check_nginix if needed.
 install_ngnix_if_needed(){
