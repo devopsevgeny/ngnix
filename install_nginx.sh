@@ -59,16 +59,8 @@ check_extras(){
     done
     }
 
-#  Function will install  NGINX
-
-#  Function will install  NGINX extras.
-install_nginx_extras(){
-    sudo apt update -y
-    sudo apt install apache2-utils nginx-extras -y
-}
-
-
 # Function will use check_nginix and check_nginix if needed.
+
 install_ngnix_if_needed(){
     if ! check_nginx; then
         echo "Nginx not found. Installing now..."
