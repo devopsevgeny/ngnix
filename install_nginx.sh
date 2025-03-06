@@ -59,17 +59,6 @@ check_extras(){
     done
     }
 
-# Function will use check_nginix and check_nginix if needed.
-
-install_ngnix_if_needed(){
-    if ! check_nginx; then
-        echo "Nginx not found. Installing now..."
-        install_nginx
-    else
-        "Nginx installed"
-    fi
-}
-
 # Function will create a virtual host in NGNIX  
 create_virtual_host(){
     read -p "Enter desired virtual host , for example example.com: " my_domain
