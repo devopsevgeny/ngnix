@@ -51,7 +51,7 @@ check_nginx()
 
 # Function will check if NGINX is installed and install if not presented.
 
-check_install_nginix()
+check_install_nginx()
 {
     if ! which nginx > /dev/null 2>&1; then
         sudo apt update -y
@@ -77,8 +77,7 @@ check_install_extras(){
 # Function will create a virtual host in NGNIX  
 create_virtual_host(){
     read -p "Enter desired virtual host , for example example.com: " my_domain
-    cd $s_vailable
-    cat > $my_domain << EOF
+    cat > "$s_vailable$my_domain.conf" <<EOF
 server {
     listen 80;
     server_name $my_domain;
@@ -131,7 +130,7 @@ EOF
 install_cgi(){
     sudo apt update -y 
     sudo apt install fcgiwrap spawn-fcgi -y 
-    sudo systemctl enable --now fcgiwrap -y 
+    sudo systemctl enable --now fcgiwrap 
 
 }
 
@@ -209,7 +208,7 @@ while getopts ":hiIdD:" option; do
         check_nginx
          exit;;
       I) # Install NGINX 
-         check_install_nginix
+         check_install_nginx
          check_install_extras
          exit;;
       d) # Check that the virtual host is configured. If not, ask for a virtual host name and configure it.
