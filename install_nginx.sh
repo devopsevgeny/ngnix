@@ -42,7 +42,7 @@ Help()
 
 check_nginx()
 {
-    if ! which nginx > /dev/null 2>&1; then
+    if ! command -v nginx > /dev/null 2>&1; then
         echo "NGINX is not installed."
     else
         echo "NGINX is installed"
