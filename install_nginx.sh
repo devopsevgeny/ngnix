@@ -4,7 +4,7 @@
 #  Version:        1.1.3
 #  Author:         Feigelman Evgeny
 #  Date:           2025-02-12
-#  Description:    This script will help you with NGNIX installation and configuration.
+#  Description:    This script will help you with NGINX installation and configuration.
 #                  
 #                  
 set -o errexit
@@ -117,7 +117,7 @@ EOF
 
 
 }
-# Functiuon will check if any virtual hosts are exists exchept the default and create one.
+# Function will check if any virtual hosts exist except the default and create one.
 check_and_create_virtual_host() {
     existing_vhosts=$(find "$s_enabled" -type l ! -name "default" || true)
 
@@ -135,7 +135,7 @@ add_auth(){
     local user=''
     local password=''
     local passfile="/etc/nginx/.htpasswd"
-    local nginx_config="/etc/nginx/conf.d/restricred.conf"
+    local nginx_config="/etc/nginx/conf.d/restricted.conf"
     read -p "Enter username: " user
     read -s -p "Enter password: " password
     if [ ! -f "$passfile" ]; then
@@ -217,7 +217,7 @@ EOF
         echo "Userdir configuration already exists in $nginx_conf"
     else
         sudo sed -i "/^}/i $user_dir" "$nginx_conf"
-        echo  "Added user directrory."
+        echo  "Added user directory."
     fi
     sudo nginx -t && sudo systemctl restart nginx
     echo "Nginx restarted with user directrory."
