@@ -81,7 +81,7 @@ create_virtual_host(){
         return
     fi
 
-    sudo cat > "$s_available/$my_domain.conf" <<EOF
+    sudo tee > "$s_available/$my_domain.conf" <<EOF
 server {
     listen 80;
     server_name $my_domain;
@@ -100,7 +100,7 @@ create_files(){
         sudo mkdir -p "/var/www/$my_domain"
         sudo chown -R www-data:www-data "/var/www/$my_domain"
         sudo chmod -R 755 "/var/www/$my_domain"
-sudo cat > "/var/www/$my_domain/index.html" <<EOF
+sudo tee > "/var/www/$my_domain/index.html" <<EOF
 <!DOCTYPE html>
 <html>
 <head>
@@ -137,14 +137,16 @@ add_auth(){
     local passfile="/etc/nginx/.htpasswd"
     local nginx_config="/etc/nginx/conf.d/restricted.conf"
     read -p "Enter username: " user
+    echo
     read -s -p "Enter password: " password
+    echo
     if [ ! -f "$passfile" ]; then
         sudo htpasswd -bc "$passfile" "$user" "$password"
     else
         sudo htpasswd -b "$passfile" "$user" "$password"
     fi
     echo "User '$user' added successfully to $passfile."
-    cat > $nginx_config <<EOF
+    sudo tee \$nginx_config > /dev/null <<EOF
     location /secure {
         auth_basic "Restricted Area";
         auth_basic_user_file /etc/nginx/.htpasswd;
