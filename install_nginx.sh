@@ -84,7 +84,7 @@ server {
     root /var/www/$my_domain;
     index index.html;
 }
-    ln -s "/etc/nginx/sites-available/$my_domain.conf" /etc/nginx/sites-enabled/
+    ln -s "$s_available$my_domain.conf" "$s_enabled"
     sudo systemctl restart nginx
 
 EOF
