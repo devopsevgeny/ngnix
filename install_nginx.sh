@@ -106,7 +106,7 @@ cat > "/var/www/$my_domain/index.html" <<EOF
 </html>
 EOF
     else
-        echo "/var/www/$my_domain" is already ixists
+        echo "/var/www/$my_domain already exists"
     fi
 
 
@@ -233,6 +233,7 @@ while getopts ":hiIdD:" option; do
          exit;;
       d) # Check that the virtual host is configured. If not, ask for a virtual host name and configure it.
          check_and_create_virtual_host
+         create_files
          exit;;
       D) # Check the dependencies of userdir, auth, and CGI. If they are not present, install them.
           add_auth
