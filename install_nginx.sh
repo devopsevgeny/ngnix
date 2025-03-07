@@ -84,7 +84,7 @@ server {
     root /var/www/$my_domain;
     index index.html;
 }
-    ln -s /etc/nginx/sites-available/$my_domain /etc/nginx/sites-enabled/
+    ln -s "/etc/nginx/sites-available/$my_domain.conf" /etc/nginx/sites-enabled/
     sudo systemctl restart nginx
 
 EOF
@@ -92,7 +92,7 @@ EOF
 
 # Functiuon will check if any virtual hosts are exists exchept the default and create one.
 check_and_create_virtual_host() {
-    existing_vhosts=$(find "$s_enabled" -type l ! -name "default")
+    existing_vhosts=$(find "$s_enabled" -type l ! -name "default" || true)
 
     if [[ -n "$existing_vhosts" ]]; then
         echo "Virtual hosts already exist:"
@@ -112,10 +112,9 @@ add_auth(){
     read -p "Enter username: " user
     read -s -p "Enter password: " password
     if [ ! -f "$passfile" ]; then
-        sudo htpasswd -c "$passfile" "$user"
+        sudo htpasswd -bc "$passfile" "$user" "$password"
     else
-        sudo htpasswd "$passfile" "$user"
-
+        sudo htpasswd -b "$passfile" "$user" "$password"
     fi
     echo "User '$user' added successfully to $passfile."
     cat > $nginx_config <<EOF
