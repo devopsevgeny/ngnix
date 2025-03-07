@@ -108,7 +108,7 @@ add_auth(){
     local user=''
     local password=''
     local passfile="/etc/nginx/.htpasswd"
-    local ngnix_config="/etc/nginx/conf.d/restricred.conf"
+    local nginx_config="/etc/nginx/conf.d/restricred.conf"
     read -p "Enter username: " user
     read -s -p "Enter password: " password
     if [ ! -f "$passfile" ]; then
@@ -118,7 +118,7 @@ add_auth(){
 
     fi
     echo "User '$user' added successfully to $passfile."
-    cat > $ngnix_config <<EOF
+    cat > $nginx_config <<EOF
     location /secure {
         auth_basic "Restricted Area";
         auth_basic_user_file /etc/nginx/.htpasswd;
