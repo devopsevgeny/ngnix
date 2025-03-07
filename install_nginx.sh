@@ -39,7 +39,6 @@ Help()
    echo
 }
 
-
 check_nginx()
 {
     if ! command -v nginx > /dev/null 2>&1; then
@@ -91,7 +90,7 @@ server {
 }
 EOF
     if [ ! -L "$s_enabled/$my_domain.conf" ]; then
-        ln -s "$s_available/$my_domain.conf" "$s_enabled"
+        ln -s "$s_available/$my_domain.conf" "$s_enabled/$my_domain.conf"
     fi
 
     sudo systemctl restart nginx
@@ -226,7 +225,7 @@ EOF
 }
 
 #Menu
-while getopts ":hiIdD:" option; do
+while getopts ":hiIdD" option; do
    case $option in
       h) # display Help
          Help
