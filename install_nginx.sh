@@ -40,7 +40,7 @@ Help()
 }
 
 
-check_nginix()
+check_nginx()
 {
     if ! which nginx > /dev/null 2>&1; then
         echo "NGINX is not installed."
@@ -51,7 +51,7 @@ check_nginix()
 
 # Function will check if NGINX is installed and install if not presented.
 
-check_install_nginix()
+check_install_nginx()
 {
     if ! which nginx > /dev/null 2>&1; then
         sudo apt update -y
@@ -77,8 +77,7 @@ check_install_extras(){
 # Function will create a virtual host in NGNIX  
 create_virtual_host(){
     read -p "Enter desired virtual host , for example example.com: " my_domain
-    cd $s_vailable
-    cat > $my_domain << EOF
+    cat > "$s_vailable$my_domain.conf" <<EOF
 server {
     listen 80;
     server_name $my_domain;
@@ -109,7 +108,7 @@ add_auth(){
     local user=''
     local password=''
     local passfile="/etc/nginx/.htpasswd"
-    local ngnix_config="/etc/nginx/conf.d/restricred.conf;"
+    local ngnix_config="/etc/nginx/conf.d/restricred.conf"
     read -p "Enter username: " user
     read -s -p "Enter password: " password
     if [ ! -f "$passfile" ]; then
@@ -131,7 +130,7 @@ EOF
 install_cgi(){
     sudo apt update -y 
     sudo apt install fcgiwrap spawn-fcgi -y 
-    sudo systemctl enable --now fcgiwrap -y 
+    sudo systemctl enable --now fcgiwrap 
 
 }
 
@@ -182,9 +181,9 @@ EOF
 
 # Userdir
 config_userdir(){
-user_dir=$(cat << EOF
+user_dir=$(cat <<EOF
 location ~ ^/~(.+?)(/.*)?$ {
-    alias /home/$1/public_html$2;
+    alias /home/\$1/public_html\$2;
 }
 EOF
 )
@@ -198,7 +197,6 @@ EOF
     echo "Nginx restarted with user directrory."
  
 }
-
 
 #Menu
 while getopts ":hiIdD:" option; do
