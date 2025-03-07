@@ -14,7 +14,7 @@ set -o pipefail
 
 # Variables 
 
-s_vailable=/etc/nginx/sites-available/
+s_available=/etc/nginx/sites-available/
 s_enabled=/etc/nginx/sites-enabled/
 my_domain=feigelman.com
 test_script=/usr/lib/cgi-bin/test.py
@@ -77,7 +77,7 @@ check_install_extras(){
 # Function will create a virtual host in NGNIX  
 create_virtual_host(){
     read -p "Enter desired virtual host , for example example.com: " my_domain
-    cat > "$s_vailable$my_domain.conf" <<EOF
+    cat > "$s_available$my_domain.conf" <<EOF
 server {
     listen 80;
     server_name $my_domain;
