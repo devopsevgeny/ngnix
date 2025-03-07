@@ -52,7 +52,7 @@ check_nginx()
 
 check_install_nginx()
 {
-    if ! which nginx > /dev/null 2>&1; then
+    if ! command -v  nginx > /dev/null 2>&1; then
         sudo apt update -y
         sudo apt install nginx -y
     else
@@ -81,7 +81,7 @@ create_virtual_host(){
         return
     fi
 
-    cat > "$s_available/$my_domain.conf" <<EOF
+    sudo cat > "$s_available/$my_domain.conf" <<EOF
 server {
     listen 80;
     server_name $my_domain;
@@ -100,7 +100,7 @@ create_files(){
         sudo mkdir -p "/var/www/$my_domain"
         sudo chown -R www-data:www-data "/var/www/$my_domain"
         sudo chmod -R 755 "/var/www/$my_domain"
-cat > "/var/www/$my_domain/index.html" <<EOF
+sudo cat > "/var/www/$my_domain/index.html" <<EOF
 <!DOCTYPE html>
 <html>
 <head>
