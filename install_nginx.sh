@@ -14,11 +14,11 @@ set -o pipefail
 
 # Variables 
 
-s_available=/etc/nginx/sites-available/
-s_enabled=/etc/nginx/sites-enabled/
-my_domain=feigelman.com
-test_script=/usr/lib/cgi-bin/test.py
-nginx_conf=/etc/nginx/sites-available/default
+S_AVAILABLE=/etc/nginx/sites-available/
+S_ENABLED=/etc/nginx/sites-enabled/
+MY_DOMAIN=feigelman.com
+TEST_SCRIPT=/usr/lib/cgi-bin/test.py
+NGINX_CONF=/etc/nginx/sites-available/default
 
 Help()
 {
@@ -75,51 +75,51 @@ check_install_extras(){
 
 # Function will create a virtual host in NGNIX  
 create_virtual_host(){
-    read -p "Enter desired virtual host , for example example.com: " my_domain
-    if [ -f "$s_available/$my_domain.conf" ]; then
-        echo "Virtual host $my_domain already exists. Skipping."
+    read -p "Enter desired virtual host , for example example.com: " MY_DOMAIN
+    if [ -f "$S_AVAILABLE/$MY_DOMAIN.conf" ]; then
+        echo "Virtual host $MY_DOMAIN already exists. Skipping."
         return
     fi
 
-    sudo tee > "$s_available/$my_domain.conf" <<EOF
+    sudo tee > "$S_AVAILABLE/$MY_DOMAIN.conf" <<EOF
 server {
     listen 80;
-    server_name $my_domain;
-    root /var/www/$my_domain;
+    server_name $MY_DOMAIN;
+    root /var/www/$MY_DOMAIN;
     index index.html;
 }
 EOF
-    if [ ! -L "$s_enabled/$my_domain.conf" ]; then
-        ln -s "$s_available/$my_domain.conf" "$s_enabled/$my_domain.conf"
+    if [ ! -L "$S_ENABLED/$MY_DOMAIN.conf" ]; then
+        ln -s "$S_AVAILABLE/$MY_DOMAIN.conf" "$S_ENABLED/$MY_DOMAIN.conf"
     fi
 
     sudo systemctl restart nginx
 }
 create_files(){
-    if [ ! -d "/var/www/$my_domain" ]; then 
-        sudo mkdir -p "/var/www/$my_domain"
-        sudo chown -R www-data:www-data "/var/www/$my_domain"
-        sudo chmod -R 755 "/var/www/$my_domain"
-sudo tee > "/var/www/$my_domain/index.html" <<EOF
+    if [ ! -d "/var/www/$MY_DOMAIN" ]; then 
+        sudo mkdir -p "/var/www/$MY_DOMAIN"
+        sudo chown -R www-data:www-data "/var/www/$MY_DOMAIN"
+        sudo chmod -R 755 "/var/www/$MY_DOMAIN"
+sudo tee > "/var/www/$MY_DOMAIN/index.html" <<EOF
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome to $my_domain</title>
+    <title>Welcome to $MY_DOMAIN</title>
 </head>
 <body>
-    <h1>Success! The $my_domain virtual host is working!</h1>
+    <h1>Success! The $MY_DOMAIN virtual host is working!</h1>
 </body>
 </html>
 EOF
     else
-        echo "/var/www/$my_domain already exists"
+        echo "/var/www/$MY_DOMAIN already exists"
     fi
 
 
 }
 # Function will check if any virtual hosts exist except the default and create one.
 check_and_create_virtual_host() {
-    existing_vhosts=$(find "$s_enabled" -type l ! -name "default" || true)
+    existing_vhosts=$(find "$S_ENABLED" -type l ! -name "default" || true)
 
     if [[ -n "$existing_vhosts" ]]; then
         echo "Virtual hosts already exist:"
@@ -129,7 +129,6 @@ check_and_create_virtual_host() {
         create_virtual_host
     fi
 }
-
 
 add_auth(){
     local user=''
@@ -164,7 +163,7 @@ install_cgi(){
 
 # Config CGI 
 config_cgi(){
-    sudo cp "$nginx_conf" "$nginx_conf.bak"
+    sudo cp "$NGINX_CONF" "$NGINX_CONF.bak"
 
 cgi_block=$(cat <<EOF
 
@@ -182,10 +181,10 @@ cgi_block=$(cat <<EOF
 EOF
 )
 
-    if grep -q "location /cgi-bin/" "$nginx_conf"; then
-        echo "CGI configuration already exists in $nginx_conf"
+    if grep -q "location /cgi-bin/" "$NGINX_CONF"; then
+        echo "CGI configuration already exists in $NGINX_CONF"
     else
-        sudo sed -i "/^}/i $cgi_block" "$nginx_conf"
+        sudo sed -i "/^}/i $cgi_block" "$NGINX_CONF"
         echo "CGI configuration added successfully!"
     fi
 
@@ -195,16 +194,16 @@ EOF
 }
 
 # Create a CGI sctipt
-create_test_script(){
-    cat > $test_script <<EOF
+create_TEST_SCRIPT(){
+    cat > $TEST_SCRIPT <<EOF
 #!/usr/bin/env python3
 
 print("Content-type: text/html\n")
 print("<html><body><h1>Hello from Python CGI</h1></body></html>")
 
 EOF
-    sudo chmod +x $test_script
-    sudo chown www-data: $test_script 
+    sudo chmod +x $TEST_SCRIPT
+    sudo chown www-data: $TEST_SCRIPT 
 }
 
 # Userdir
@@ -215,10 +214,10 @@ location ~ ^/~(.+?)(/.*)?$ {
 }
 EOF
 )
-    if grep -q "alias /home/"  "$nginx_conf"; then
-        echo "Userdir configuration already exists in $nginx_conf"
+    if grep -q "alias /home/"  "$NGINX_CONF"; then
+        echo "Userdir configuration already exists in $NGINX_CONF"
     else
-        sudo sed -i "/^}/i $user_dir" "$nginx_conf"
+        sudo sed -i "/^}/i $user_dir" "$NGINX_CONF"
         echo  "Added user directory."
     fi
     sudo nginx -t && sudo systemctl restart nginx
@@ -247,7 +246,7 @@ while getopts ":hiIdD" option; do
           add_auth
           install_cgi
           config_cgi
-          create_test_script
+          create_TEST_SCRIPT
           config_userdir
           exit;;
      \?) # Invalid option
