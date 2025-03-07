@@ -118,7 +118,7 @@ add_auth(){
 
     fi
     echo "User '$user' added successfully to $passfile."
-    cat > $ngnix_config <<  EOF
+    cat > $ngnix_config <<EOF
     location /secure {
         auth_basic "Restricted Area";
         auth_basic_user_file /etc/nginx/.htpasswd;
@@ -168,7 +168,7 @@ EOF
 
 # Create a CGI sctipt
 create_test_script(){
-    cat > $test_script << EOF
+    cat > $test_script <<EOF
 #!/usr/bin/env python3
 
 print("Content-type: text/html\n")
