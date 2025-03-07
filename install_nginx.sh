@@ -84,12 +84,33 @@ server {
     root /var/www/$my_domain;
     index index.html;
 }
+EOF
+
     ln -s "$s_available$my_domain.conf" "$s_enabled"
     sudo systemctl restart nginx
-
-EOF
 }
+create_files(){
+    if [ ! -d "/var/www/$my_domain" ]; then 
+        sudo mkdir -p "/var/www/$my_domain"
+        sudo chown -R www-data:www-data "/var/www/$my_domain"
+        sudo chmod -R 755 "/var/www/$my_domain"
+cat > "/var/www/$my_domain/index.html" <<EOF
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to $my_domain</title>
+</head>
+<body>
+    <h1>Success! The $my_domain virtual host is working!</h1>
+</body>
+</html>
+EOF
+    else
+        echo "/var/www/$my_domain" is already ixists
+    fi
 
+
+}
 # Functiuon will check if any virtual hosts are exists exchept the default and create one.
 check_and_create_virtual_host() {
     existing_vhosts=$(find "$s_enabled" -type l ! -name "default" || true)
