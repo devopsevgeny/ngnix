@@ -77,6 +77,11 @@ check_install_extras(){
 # Function will create a virtual host in NGNIX  
 create_virtual_host(){
     read -p "Enter desired virtual host , for example example.com: " my_domain
+    if [ -f "$s_available$my_domain.conf" ]; then
+        echo "Virtual host $my_domain already exists. Skipping."
+        return
+    fi
+
     cat > "$s_available$my_domain.conf" <<EOF
 server {
     listen 80;
@@ -85,8 +90,10 @@ server {
     index index.html;
 }
 EOF
-
-    ln -s "$s_available$my_domain.conf" "$s_enabled"
+    if [ ! -L "$s_enabled$my_domain.conf" ]; then
+        ln -s "$s_available$my_domain.conf" "$s_enabled"
+    fi
+    
     sudo systemctl restart nginx
 }
 create_files(){
