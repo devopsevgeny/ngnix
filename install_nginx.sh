@@ -45,7 +45,7 @@ exit 0
 
 function check_nginx()
 {
-    if ! command -v nginx > /dev/null 2>&1; then
+    if [[ ! command -v nginx > /dev/null 2>&1]]; then
         echo "NGINX is not installed."
     else
         echo "NGINX is installed"
@@ -56,7 +56,7 @@ function check_nginx()
 
 function check_install_nginx()
 {
-    if ! command -v  nginx > /dev/null 2>&1; then
+    if [[ ! command -v  nginx > /dev/null 2>&1]]; then
         sudo apt update -y
         sudo apt install nginx -y
     else
@@ -68,7 +68,7 @@ function check_install_nginx()
 
 function check_install_extras(){
     for pkg in apache2-utils nginx-extras; do
-        if dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null | grep -q "installed"; then
+        if [[ dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null | grep -q "installed"]]; then
             echo "$pkg is installed."
         else
             echo "$pkg is NOT installed. Installing..."
@@ -80,7 +80,7 @@ function check_install_extras(){
 # Function will create a virtual host in NGNIX  
 function create_virtual_host(){
     read -p "Enter desired virtual host , for example example.com: " MY_DOMAIN
-    if [ -f "$S_AVAILABLE/$MY_DOMAIN.conf" ]; then
+    if [[ -f "$S_AVAILABLE/$MY_DOMAIN.conf" ]]; then
         echo "Virtual host $MY_DOMAIN already exists. Skipping."
         return
     fi
@@ -93,14 +93,14 @@ server {
     index index.html;
 }
 EOF
-    if [ ! -L "$S_ENABLED/$MY_DOMAIN.conf" ]; then
+    if [[ ! -L "$S_ENABLED/$MY_DOMAIN.conf" ]]; then
         ln -s "$S_AVAILABLE/$MY_DOMAIN.conf" "$S_ENABLED/$MY_DOMAIN.conf"
     fi
 
     sudo systemctl restart nginx
 }
 function create_files(){
-    if [ ! -d "/var/www/$MY_DOMAIN" ]; then 
+    if [[ ! -d "/var/www/$MY_DOMAIN" ]]; then 
         sudo mkdir -p "/var/www/$MY_DOMAIN"
         sudo chown -R www-data:www-data "/var/www/$MY_DOMAIN"
         sudo chmod -R 755 "/var/www/$MY_DOMAIN"
@@ -186,7 +186,7 @@ cgi_block=$(cat <<EOF
 EOF
 )
 
-    if grep -q "location /cgi-bin/" "$NGINX_CONF"; then
+    if [[grep -q "location /cgi-bin/" "$NGINX_CONF"]]; then
         echo "CGI configuration already exists in $NGINX_CONF"
     else
         sudo sed -i "/^}/i $cgi_block" "$NGINX_CONF"
@@ -200,7 +200,7 @@ EOF
 
 # Create a CGI sctipt
 function create_TEST_SCRIPT(){
-    cat > $TEST_SCRIPT <<EOF
+    sudo tee > $TEST_SCRIPT <<EOF
 #!/usr/bin/env python3
 
 print("Content-type: text/html\n")
@@ -219,7 +219,7 @@ location ~ ^/~(.+?)(/.*)?$ {
 }
 EOF
 )
-    if grep -q "alias /home/"  "$NGINX_CONF"; then
+    if [[grep -q "alias /home/"  "$NGINX_CONF"]]; then
         echo "Userdir configuration already exists in $NGINX_CONF"
     else
         sudo sed -i "/^}/i $user_dir" "$NGINX_CONF"
