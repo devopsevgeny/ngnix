@@ -45,7 +45,7 @@ exit 0
 
 function check_nginx()
 {
-    if [[ ! command -v nginx > /dev/null 2>&1]]; then
+    if [[ ! command -v nginx > /dev/null 2>&1 ]]; then
         echo "NGINX is not installed."
     else
         echo "NGINX is installed"
@@ -56,7 +56,7 @@ function check_nginx()
 
 function check_install_nginx()
 {
-    if [[ ! command -v  nginx > /dev/null 2>&1]]; then
+    if [[ ! command -v  nginx > /dev/null 2>&1 ]]; then
         sudo apt update -y
         sudo apt install nginx -y
     else
@@ -68,7 +68,7 @@ function check_install_nginx()
 
 function check_install_extras(){
     for pkg in apache2-utils nginx-extras; do
-        if [[ dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null | grep -q "installed"]]; then
+        if [[ dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null | grep -q "installed" ]]; then
             echo "$pkg is installed."
         else
             echo "$pkg is NOT installed. Installing..."
@@ -186,7 +186,7 @@ cgi_block=$(cat <<EOF
 EOF
 )
 
-    if [[grep -q "location /cgi-bin/" "$NGINX_CONF"]]; then
+    if [[ grep -q "location /cgi-bin/" "$NGINX_CONF" ]]; then
         echo "CGI configuration already exists in $NGINX_CONF"
     else
         sudo sed -i "/^}/i $cgi_block" "$NGINX_CONF"
@@ -219,7 +219,7 @@ location ~ ^/~(.+?)(/.*)?$ {
 }
 EOF
 )
-    if [[grep -q "alias /home/"  "$NGINX_CONF"]]; then
+    if [[ grep -q "alias /home/"  "$NGINX_CONF" ]]; then
         echo "Userdir configuration already exists in $NGINX_CONF"
     else
         sudo sed -i "/^}/i $user_dir" "$NGINX_CONF"
