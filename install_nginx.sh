@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # -----------------------------------------------------
 #  Script Name:    install_nginx.sh
-#  Version:        1.1.3
+#  Version:        1.1.4
 #  Author:         Feigelman Evgeny
 #  Date:           2025-02-12
 #  Description:    This script will help you with NGINX installation and configuration.
@@ -43,6 +43,7 @@ D     Check the dependencies of userdir, auth, and CGI. If they are not present,
 exit 0
 }
 
+# Check in NGNIX is installed 
 function check_nginx()
 {
     if [[ ! command -v nginx > /dev/null 2>&1 ]]; then
@@ -73,6 +74,7 @@ function check_install_extras(){
         else
             echo "$pkg is NOT installed. Installing..."
             sudo apt install -y "$pkg"
+           
         fi
     done
     }
