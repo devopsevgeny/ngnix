@@ -20,26 +20,27 @@ MY_DOMAIN=feigelman.com
 TEST_SCRIPT=/usr/lib/cgi-bin/test.py
 NGINX_CONF=/etc/nginx/sites-available/default
 
-Help()
+function Help()
 {
    # Display Help
-   echo "This script can check if NGINX is installed,"
-   echo "Check that the virtual host is configured. If not," 
-   echo "it will ask for a virtual host name and configure it."
-   echo "Check the dependencies of userdir, auth, and CGI." 
-   echo "If they are not present, install them"
-   echo
-   echo "Syntax: install_nginx.sh [-h|i|I|d|D]"
-   echo "options:"
-   echo "h     Print this Help. "
-   echo "i     Print if NGINX is installed or not. "
-   echo "I     Install NGINX. "
-   echo "d     Check that the virtual host is configured and configure it. "
-   echo "D     Check the dependencies of userdir, auth, and CGI. If they are not present, install them. "
-   echo
+   printf "%s\n" \
+"This script can check if NGINX is installed,
+Check that the virtual host is configured. If not, 
+it will ask for a virtual host name and configure it.
+Check the dependencies of userdir, auth, and CGI. 
+If they are not present, install them
+
+Syntax: install_nginx.sh [-h|i|I|d|D]
+options:
+h     Print this Help.
+i     Print if NGINX is installed or not.
+I     Install NGINX.
+d     Check that the virtual host is configured and configure it.
+D     Check the dependencies of userdir, auth, and CGI. If they are not present, install them.
+"
 }
 
-check_nginx()
+function check_nginx()
 {
     if ! command -v nginx > /dev/null 2>&1; then
         echo "NGINX is not installed."
@@ -50,7 +51,7 @@ check_nginx()
 
 # Function will check if NGINX is installed and install if not presented.
 
-check_install_nginx()
+function check_install_nginx()
 {
     if ! command -v  nginx > /dev/null 2>&1; then
         sudo apt update -y
@@ -62,7 +63,7 @@ check_install_nginx()
 
 # Function will check if NGINX extras are installed and install them.
 
-check_install_extras(){
+function check_install_extras(){
     for pkg in apache2-utils nginx-extras; do
         if dpkg-query -W -f='${Status}' "$pkg" 2>/dev/null | grep -q "installed"; then
             echo "$pkg is installed."
@@ -74,7 +75,7 @@ check_install_extras(){
     }
 
 # Function will create a virtual host in NGNIX  
-create_virtual_host(){
+function create_virtual_host(){
     read -p "Enter desired virtual host , for example example.com: " MY_DOMAIN
     if [ -f "$S_AVAILABLE/$MY_DOMAIN.conf" ]; then
         echo "Virtual host $MY_DOMAIN already exists. Skipping."
@@ -95,7 +96,7 @@ EOF
 
     sudo systemctl restart nginx
 }
-create_files(){
+function create_files(){
     if [ ! -d "/var/www/$MY_DOMAIN" ]; then 
         sudo mkdir -p "/var/www/$MY_DOMAIN"
         sudo chown -R www-data:www-data "/var/www/$MY_DOMAIN"
@@ -117,8 +118,9 @@ EOF
 
 
 }
+
 # Function will check if any virtual hosts exist except the default and create one.
-check_and_create_virtual_host() {
+function check_and_create_virtual_host() {
     existing_vhosts=$(find "$S_ENABLED" -type l ! -name "default" || true)
 
     if [[ -n "$existing_vhosts" ]]; then
@@ -130,7 +132,7 @@ check_and_create_virtual_host() {
     fi
 }
 
-add_auth(){
+function add_auth(){
     local user=''
     local password=''
     local passfile="/etc/nginx/.htpasswd"
@@ -154,7 +156,7 @@ EOF
 }
 
 # Install CGI Packages  
-install_cgi(){
+function install_cgi(){
     sudo apt update -y 
     sudo apt install fcgiwrap spawn-fcgi -y 
     sudo systemctl enable --now fcgiwrap 
@@ -162,7 +164,7 @@ install_cgi(){
 }
 
 # Config CGI 
-config_cgi(){
+function config_cgi(){
     sudo cp "$NGINX_CONF" "$NGINX_CONF.bak"
 
 cgi_block=$(cat <<EOF
@@ -194,7 +196,7 @@ EOF
 }
 
 # Create a CGI sctipt
-create_TEST_SCRIPT(){
+function create_TEST_SCRIPT(){
     cat > $TEST_SCRIPT <<EOF
 #!/usr/bin/env python3
 
@@ -206,8 +208,8 @@ EOF
     sudo chown www-data: $TEST_SCRIPT 
 }
 
-# Userdir
-config_userdir(){
+# Config serdir
+function config_userdir(){
 user_dir=$(cat <<EOF
 location ~ ^/~(.+?)(/.*)?$ {
     alias /home/\$1/public_html\$2;
