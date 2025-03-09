@@ -20,9 +20,10 @@ MY_DOMAIN=feigelman.com
 TEST_SCRIPT=/usr/lib/cgi-bin/test.py
 NGINX_CONF=/etc/nginx/sites-available/default
 
+# Display Help
 function Help()
 {
-   # Display Help
+   
    printf "%s\n" \
 "This script can check if NGINX is installed,
 Check that the virtual host is configured. If not, 
@@ -38,6 +39,8 @@ I     Install NGINX.
 d     Check that the virtual host is configured and configure it.
 D     Check the dependencies of userdir, auth, and CGI. If they are not present, install them.
 "
+
+exit 0
 }
 
 function check_nginx()
