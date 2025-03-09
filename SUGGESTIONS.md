@@ -22,7 +22,7 @@ Missing md files
 
 
 ### SCRIPT
-- lines 17-21, globally declared variable need to be with Capital letters
+- lines 17-21, globally declared variable need to be with Capital letters - FIXED
 - functions suppose to start with word `function` in them
 - help function : use single `printf` command to format the whole output and exit with 0 by the end of it.
 - you are suppose to us [[ and not [
